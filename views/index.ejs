@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%= title %></title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/style/estilo.css">
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Contabilidad</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Registros contables</a></li>
+            <li><a href="#">Reporte</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div>
+    </nav>
+	
+	<div class="container">
+		<div class="col-md-12">
+		<div class="jumbotron">
+			  <div class="container">
+			  	<h2>Administracion de cuenta</h2>
+
+			  	<button type"button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Agregar Cuenta</button>
+			    <table class="table">
+			      <thead>
+			        <tr>
+			          <th>Nombre</th>
+			          <th>Tipo</th>
+			          <th>Transacciones</th>
+			          <th>Nivel</th>
+			          <th>Mayor</th>
+			          <th>Balance</th>
+			          <th>Estado</th>
+			          <th>Acciones</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			      	<% data.forEach(function(cuentas){
+
+
+			      	 %>
+			        <tr>
+			          <td><%= cuentas.Description%></td>
+			          <td><%= cuentas.TipoCuenta %></td>
+			          <td><%= cuentas.Trans %></td>
+			          <td><%= cuentas.Nivel %></td>
+			          <td><%= cuentas.CuentaMayor %></td>
+			          <td><%= cuentas.Balance %></td>
+			          <td><%= cuentas.Estado %></td>
+			          <td>
+			          	
+			          	<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+   
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" onclick="editar('<%= cuentas.ID %>')">Editar cuenta</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" onclick="eliminar('<%= cuentas.ID %>')">Borrar cuenta</a></li>
+
+  </ul>
+</div>
+			          </td>
+			          
+
+			        </tr>
+			        <% }); %>
+			      </tbody>
+			    </table>
+  </div>
+			  
+			</div>
+
+		</div>
+
+	</div>
+	<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h2 class="modal-title" id="myModalLabel">Agregar Cuenta</h2>
+      <div class="modal-body">
+
+
+
+			<div class="form-group">
+			        <label class="col-sm-3 control-label" for="card-holder-name">Descripcion Cuenta</label>
+			        <div class="col-sm-9">
+			          <input type="text" class="form-control"  id="Descripcion" placeholder="Card Holder's Name" required>
+			        </div>
+			      </div>
+
+
+
+
+
+      	</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">Close</button>
+        
+      </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script>
+	$(document).ready(function(){
+
+		function editar(id){
+
+			$.ajax({
+				type:"GET",
+				url: "/editar",
+				data: {id: id}
+
+				}).done(function(msg){
+					
+				});
+
+
+
+		}
+
+		function eliminar(id)
+		{
+			$.ajax({
+				type:"GET",
+				url: "/eliminar",
+				data: {id: id}
+
+				}).done(function(msg){
+
+				});
+
+		}
+
+	});	
+
+
+</script>
+
+
+	<script type="text/javascript" src="jquery.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
