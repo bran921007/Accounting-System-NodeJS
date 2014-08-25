@@ -17,17 +17,50 @@ module.exports = function (app){
 
 	});
 
+	app.post("/getCuenta", function(req, res){
+		var id = req.body.id;
+		contable.getCuenta(id, function(data){
+			res.send(data, 200);
+			console.log(data);
 
-	app.get("/editar/:id", function(req, res){
+		});
+	});
 
-		var id = req.params.id;
+	app.post("/editar", function(req, res){
+		var msg;
+		 
+		var Data = {
+			id: req.body.id,
+			Descripcion: req.body.descripcion,
+			TipoCuenta: req.body.tipoCuenta,
+			CuentaPadre: null,
+			Trans: req.body.transaccion,
+			Nivel: req.body.nivel,
+			CuentaMayor: req.body.cuentaMayor,
+			Balance: req.body.balance,
+			Estado: req.body.estado
+
+			
+		};
+		contable.actualizarCuenta(Data, function(data){
+			if(data)
+            {
+                msg = " Su cuenta ha sido Actualizada";
+                res.send(msg, 200);
+            }
+            else
+            {
+                msg = " Hubo un error al actualizar Cuenta";
+                res.send(msg, 200);
+            }
+		});
 
 	});	
 
-	app.get("/eliminar/:id", function(req, res){
+	app.post("/eliminar", function(req, res){
 
 		var msg;
-		var id = req.params.id;
+		var id = req.body.id;
 		contable.eliminar(id, function(error, data){
 
 			if(data && data.msg === "deleted" || data.msg === "notExist")
@@ -58,14 +91,16 @@ module.exports = function (app){
 	app.post("/agregar", function(req, res){
 		var Data = {
 			ID: null,
-			Descripcion: req.body.Description,
-			TipoCuenta: req.body.TipoCuenta,
-			CuentaPadre: req.body.CuentaPadre,
-			Trans: req.body.Trans,
-			Nivel: req.body.Nivel,
-			CuentaMayor: 1,
-			Balance: 0,
-			Estado: "Activo"
+			Descripcion: req.body.descripcion,
+			TipoCuenta: req.body.tipoCuenta,
+			CuentaPadre: null,
+			Trans: req.body.transaccion,
+			Nivel: req.body.nivel,
+			CuentaMayor: req.body.cuentaMayor,
+			Balance: req.body.balance,
+			Estado: req.body.estado
+
+			
 		};
 
 		contable.agregarCuenta(Data, function(error, data){

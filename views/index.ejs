@@ -36,7 +36,7 @@
 			  <div class="container">
 			  	<h2>Administracion de cuenta</h2>
 
-			  	<button type"button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Agregar Cuenta</button>
+			  	<button type"button" class="btn btn-default" id="agregarCuenta">Agregar Cuenta</button>
 			    <table class="table">
 			      <thead>
 			        <tr>
@@ -56,7 +56,7 @@
 
 			      	 %>
 			        <tr>
-			          <td><%= cuentas.Description%></td>
+			          <td><%= cuentas.Descripcion%></td>
 			          <td><%= cuentas.TipoCuenta %></td>
 			          <td><%= cuentas.Trans %></td>
 			          <td><%= cuentas.Nivel %></td>
@@ -101,16 +101,89 @@
 
 
 
-			<div class="form-group">
-			        <label class="col-sm-3 control-label" for="card-holder-name">Descripcion Cuenta</label>
-			        <div class="col-sm-9">
-			          <input type="text" class="form-control"  id="Descripcion" placeholder="Card Holder's Name" required>
-			        </div>
-			      </div>
+		<form id="formularioJohn" class="bs-example bs-example-form" role="form">
 
+			 <div class="input-group" id="editarID" style="display: none;">
+      <span class="input-group-addon">ID</span>
+      <input type="text" id="id" class="form-control" disabled>
+    </div>
 
+    <br> 
 
+    <div class="input-group">
+      <span class="input-group-addon">Descripcion</span>
+      <input type="text" id="descripcion" class="form-control" placeholder="Descripcion">
+    </div>
+    <br>    
 
+    <div class="input-group">
+      <span class="input-group-addon">Tipo de Cuenta</span>
+      <select id="tipoCuenta" class="form-control" >
+		<option value="1">Activo</option>
+		<option value="2">Pasivo</option>
+      </select>
+    </div>
+    <br>    
+
+    <div class="input-group">
+      <span class="input-group-addon">Acepta transacciones?</span>
+      <select id="transaccion" class="form-control" >
+		<option value="1">Si</option>
+		<option value="2">No</option>
+      </select>
+    </div>
+	
+	<br>
+    <div class="input-group">
+      <span class="input-group-addon">Nivel</span>
+      <select id="nivel" class="form-control" >
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+      </select>
+    </div>
+
+	<br>
+
+    <div class="input-group">
+      <span class="input-group-addon">Es una cuenta Mayor?</span>
+      <select id="cuentaMayor" class="form-control" >
+		<option value="1">Si</option>
+		<option value="2">No</option>
+      </select>
+    </div>
+
+	<br>
+
+	<div class="input-group">
+      <span class="input-group-addon">Balance</span>
+      <input type="text" class="form-control" id="balance" placeholder="Balance">
+    </div>
+
+    <br>
+	<div class="input-group">
+      <span class="input-group-addon">Estado</span>
+      <select id="estado" class="form-control" >
+		<option value="1">Activo</option>
+		<option value="0">Inactivo</option>
+      </select>
+    </div>
+    <br>
+      <div class="guardarCuenta">
+        <button type="button" id="guardarCuenta" class="btn btn-danger" >Crear Cuenta</button>
+        
+      </div>
+
+      <div class="actualizarCuenta"  style="display:none;">
+      	<button type="button" id="actualizarCuenta" class="btn btn-danger" >Actualizar Cuenta</button>
+      </div>
+    <br>
+    
+  </form>
+	
+	<div id="cuentaEliminada"  style="display:none;">
+				  		
+				  	</div>
 
       	</div>
       <div class="modal-footer">
@@ -121,46 +194,120 @@
   </div>
 </div>
 
-
-
+<script type="text/javascript" src="jquery.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
 	$(document).ready(function(){
+		$("#agregarCuenta").click(function(){
+			$("h2.modal-title").text("Agregar Cuenta");
+			$("#myModal").modal('show');			  	
+		  	$("#cuentaEliminada").hide("fast");
+		  	$("#formularioJohn").show("fast");
+
+		});
+
+		$("#guardarCuenta").click(function(){
+
+
+			var descripcion = $("#descripcion").val();
+			var tipoCuenta  = $("#tipoCuenta").val();
+			var transaccion = $("#transaccion").val();      
+			var nivel       = $("#nivel").val();	
+			var cuentaMayor = $("#cuentaMayor").val();     
+			var balance     = $("#balance").val(); 
+			var estado      = $("#estado").val();
+
+			$.ajax({
+							type: "POST",
+						  url: "/agregar",
+						  data: { descripcion: descripcion, tipoCuenta: tipoCuenta, transaccion: transaccion,  nivel: nivel, cuentaMayor:cuentaMayor, balance: balance, estado: estado }
+						}).done(function(msg) {
+						  	$("#formularioJohn").html(msg);
+						});
+
+		});
+
+
+		$("#actualizarCuenta").click(function(){
+
+			var id = $("#id").val();
+			var descripcion = $("#descripcion").val();
+			var tipoCuenta  = $("#tipoCuenta").val();
+			var transaccion = $("#transaccion").val();      
+			var nivel       = $("#nivel").val();	
+			var cuentaMayor = $("#cuentaMayor").val();     
+			var balance     = $("#balance").val(); 
+			var estado      = $("#estado").val();
+
+			
+
+			$.ajax({
+							type: "POST",
+						  url: "/editar",
+						  data: { id: id, descripcion: descripcion, tipoCuenta: tipoCuenta, transaccion: transaccion,  nivel: nivel, cuentaMayor:cuentaMayor, balance: balance, estado: estado }
+						}).done(function(msg) {
+						  	$("#formularioJohn").html(msg);
+						});
+
+		});
+
+
+
+	});	
 
 		function editar(id){
 
+			$("#editarID").show();
+			$("#id").val(id);
+
 			$.ajax({
-				type:"GET",
-				url: "/editar",
+				type:"POST",
+				url: "/getCuenta",
 				data: {id: id}
 
-				}).done(function(msg){
-					
+				}).done(function(data){
+
+
+					$("#descripcion").val(data[0].Descripcion);
+					$("#tipoCuenta").val(data[0].TipoCuenta);
+
+			$("h2.modal-title").text("Editar Cuenta");
+			$("#myModal").modal('show');			  	
+		  	$("#cuentaEliminada").hide("fast");
+		  	$("#formularioJohn").show("fast");
+
+		  	$(".guardarCuenta").hide();
+		  	$(".actualizarCuenta").show();
+
 				});
 
 
 
 		}
 
-		function eliminar(id)
+	function eliminar(id)
 		{
 			$.ajax({
-				type:"GET",
+				type:"POST",
 				url: "/eliminar",
 				data: {id: id}
 
 				}).done(function(msg){
-
+					
+					$("h2.modal-title").text(msg);
+							$("#cuentaEliminada").html(msg);
+						  	$("#myModal").modal('show');
+						  	$("#formularioJohn").hide("fast");
+							$("#cuentaEliminada").show("fast");
 				});
 
 		}
 
-	});	
 
 
-</script>
+		</script>
 
 
-	<script type="text/javascript" src="jquery.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	
 </body>
 </html>
